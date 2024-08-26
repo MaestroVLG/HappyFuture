@@ -20,8 +20,7 @@ if __name__ == '__main__':
 #     #Линейный вызов
     start = time.time()
     for filename in filenames:
-        with open(filename, 'r') as f:
-           read_info(filename)
+        read_info(filename)
     end = time.time()
     print(end - start)
 
