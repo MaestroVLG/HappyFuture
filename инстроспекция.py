@@ -10,7 +10,7 @@ def introspection_info(obj):
 
     info = {
         "type": type(obj),
-        "attributes": dir(obj),
+        "attributes": [attr for attr in dir(obj) if not callable(getattr(obj, attr))],
         "methods": [method for method in dir(obj) if callable(getattr(obj, method))],
     }
 
@@ -29,11 +29,12 @@ def introspection_info(obj):
 # Пример использования
 
 number_info = introspection_info(42)
-print(number_info)
 print(number_info["type"])
 print(number_info["attributes"])
 print(number_info["methods"])
 print(number_info["bit_length"])
+
+
 
 
 
