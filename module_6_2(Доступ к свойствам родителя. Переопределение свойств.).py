@@ -23,7 +23,7 @@ class Vehicle:
         print(f"Владелец: {self.owner}")
 
     def set_color(self, new_color):
-        new_color = new_color.upper()
+        new_color == new_color
         if new_color in self.__COLOR_VARIANTS:
             self.__color = new_color
         else:
@@ -31,7 +31,7 @@ class Vehicle:
 
 
 class Sedan(Vehicle):
-    __PASSENGERS_LIMIT = 5
+    _PASSENGERS_LIMIT = 5
 
     def __init__(self, owner, model, color, engine_power):
         super().__init__(owner, model, color, engine_power)
