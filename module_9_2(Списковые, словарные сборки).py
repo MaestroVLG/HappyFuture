@@ -1,11 +1,19 @@
-from typing import Set, Dict, Any
+from typing import List, Dict, Tuple
 
 first_strings = ['Elon', 'Musk', 'Programmer', 'Monitors', 'Variable']
 second_strings = ['Task', 'Git', 'Comprehension', 'Java', 'Computer', 'Assembler']
 
+
 first_result = [x for x in first_strings if len(x) >= 5]
-print(first_result)
-second_result = [(first_strings, second_strings) for first in first_result for second in second_strings if len(first) == len(second)]
+
+first_lengths = [len(x) for x in first_result]
+print(first_lengths)
+
+
+second_result = [(first, second) for first in first_result for second in second_strings if len(first) == len(second)]
 print(second_result)
-third_result = [(string, len(string)) for string in first_strings + second_strings if len(string) % 2 == 0]
-print(third_result)
+
+
+combined_strings = first_strings + second_strings
+length_dict = {string: len(string) for string in combined_strings}
+print(length_dict)
