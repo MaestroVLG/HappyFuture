@@ -1,17 +1,17 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-
 from crud_functions import initiate_db, get_all_products, populate_db
 
 api = "7391365340:AAFRJbOx8991pgkGy-5xSGh4dGwud302JCI"
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
+# Создание базы данных и заполнение ее начальными данными
 initiate_db()
-products = get_all_products()
+populate_db()
 
 # Обычная клавиатура
 kb = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -28,8 +28,10 @@ inline_kb_calories.add(inline_button_calories, inline_button_formulas)
 
 # Inline клавиатура для продуктов
 inline_kb_products = InlineKeyboardMarkup()
-for product in products:
-    inline_button = InlineKeyboardButton(product[1], callback_data='product_buying')
+inline_kb_products = InlineKeyboardMarkup(row_width=4)
+
+for i in range(1, 5):
+    inline_button = InlineKeyboardButton(f'Product{i}', callback_data='product_buying')
     inline_kb_products.add(inline_button)
 
 @dp.message_handler(commands=['start'])
@@ -42,16 +44,23 @@ async def main_menu(message: types.Message):
 
 @dp.message_handler(text='Купить')
 async def get_buying_list(message: types.Message):
+    products = get_all_products()
+    products = products[:4]
+
     for product in products:
-        title, description, price = product[1], product[2], product[3]
-        product_description = f'Название: {title} | Описание: {description} | Цена: {price}'
+        product_id, title, description, price = product
+        with open(f'product{product[0]}.jpg', 'rb') as img:
+            if product_id > 4:
+                continue
+        inline_button = InlineKeyboardButton(text=title, callback_data=f'product_buying_{product_id}')
+        inline_kb_products.add(inline_button)
+
+
+        # Изображение продукта
+        await message.answer_photo(photo=open(f'product{product[i]}.jpg', 'rb'))
         await message.answer(product_description)
 
-        await message.answer('Выберите продукт для покупки:', reply_markup=inline_kb_products)
-
-        #изображение продукта
-        await message.answer_photo(photo=open(f'product{product[0]}.jpg', 'rb'))
-        await message.answer(product_description)
+    await message.answer('Выберите продукт для покупки:', reply_markup=inline_kb_products)
 
 
 
