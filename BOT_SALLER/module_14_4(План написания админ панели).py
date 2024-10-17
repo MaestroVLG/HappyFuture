@@ -58,7 +58,7 @@ async def get_buying_list(message: types.Message):
 
         # Изображение продукта
         await message.answer_photo(photo=open(f'product{product[i]}.jpg', 'rb'))
-        await message.answer(product_description)
+        await message.answer(product)
 
     await message.answer('Выберите продукт для покупки:', reply_markup=inline_kb_products)
 
