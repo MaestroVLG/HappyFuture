@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from crud_functions import initiate_db, get_all_products, populate_db
 
-api = "7391365340:AAFRJbOx8991pgkGy-5xSGh4dGwud302JCI"
+api = "7892457484:AAEFuhWlWZzQ7GAVZepK5ejaMDjrhJ5g--k"
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
@@ -47,8 +47,10 @@ async def get_buying_list(message: types.Message):
     products = get_all_products()
     products = products[:4]
 
+
     for product in products:
         product_id, title, description, price = product
+        product_description = f'Название: {title} | Описание: {description} | Цена: {price}'
         with open(f'product{product[0]}.jpg', 'rb') as img:
             if product_id > 4:
                 continue
@@ -57,10 +59,12 @@ async def get_buying_list(message: types.Message):
 
 
         # Изображение продукта
-        await message.answer_photo(photo=open(f'product{product[i]}.jpg', 'rb'))
+        await message.answer_photo(photo=open(f'product{product[0]}.jpg', 'rb'))
         await message.answer(product)
 
     await message.answer('Выберите продукт для покупки:', reply_markup=inline_kb_products)
+
+
 
 
 

@@ -27,7 +27,7 @@ def get_all_products():
     return products
 
 def populate_db():
-    """Заполняет таблицу Products начальными данными."""
+
     conn = sqlite3.connect(DATABASE_NAME)
     cursor = conn.cursor()
 
@@ -67,5 +67,5 @@ def reset_db():
 # Вызов функции для проверки структуры таблицы
 #check_table_structure()
 
-# Вызов функции для сброса базы данных по необходимости
-#reset_db()
+#Вызов функции для сброса базы данных по необходимости
+reset_db()
