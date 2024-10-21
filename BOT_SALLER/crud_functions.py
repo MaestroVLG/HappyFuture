@@ -3,7 +3,7 @@ import sqlite3
 DATABASE_NAME = 'products.db'
 
 def initiate_db():
-    """Создает таблицу Products, если она еще не существует."""
+    #Добавление таблицы Product
     conn = sqlite3.connect(DATABASE_NAME)
     cursor = conn.cursor()
     cursor.execute('''
@@ -12,6 +12,17 @@ def initiate_db():
             title TEXT NOT NULL,
             description TEXT,
             price INTEGER NOT NULL
+        )
+    ''')
+
+    #Добавление таблицы Users
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,  -- Добавлено уникальное ограничение
+            email TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            balance INTEGER NOT NULL DEFAULT 1000
         )
     ''')
     conn.commit()
@@ -42,9 +53,39 @@ def populate_db():
         ('Product 4', 'Описание продукта 4', 400)
     ]
 
+
     cursor.executemany('INSERT INTO Products (title, description, price) VALUES (?, ?, ?)', products)
     conn.commit()
     conn.close()
+
+#Добавляем нового пользователя в таблицу Users.
+def add_user(username, email, age, db_name='products.db'):
+
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('INSERT INTO Users (username, email, age, balance) VALUES (?, ?, ?, ?)',
+                       (username, email, age, 1000))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        print("Пользователь с таким именем уже существует.")
+    finally:
+        conn.close()
+
+#Проверка наличия пользователя в таблице Users
+def is_included(username, db_name='products.db'):
+
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('SELECT COUNT(*) FROM Users WHERE username = ?', (username,))
+        exists = cursor.fetchone()[0] > 0
+    finally:
+        conn.close()
+
+    return exists
 
 def check_table_structure():
     #Проверка структуры таблицы
@@ -56,16 +97,16 @@ def check_table_structure():
         print(column)
     conn.close()
 
-def reset_db():
-    #Сброс базы данных
-    conn = sqlite3.connect(DATABASE_NAME)
-    cursor = conn.cursor()
-    cursor.execute("DROP TABLE IF EXISTS Products")
-    initiate_db()
-    conn.close()
+#def reset_db():
+#     #Сброс базы данных
+#     conn = sqlite3.connect(DATABASE_NAME)
+#     cursor = conn.cursor()
+#     cursor.execute("DROP TABLE IF EXISTS Products")
+#     initiate_db()
+#     conn.close()
 
 # Вызов функции для проверки структуры таблицы
 #check_table_structure()
 
 #Вызов функции для сброса базы данных по необходимости
-reset_db()
+#reset_db()
